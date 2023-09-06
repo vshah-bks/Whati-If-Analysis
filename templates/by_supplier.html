@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>CO2 Emission Prediction</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!--bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <!-- Form -->
+    <div class="container">
+        <div class="row g-3">
+            <div class="container col-md-7 alert alert-info mt-5">
+                <h1>Prediction of CO2</h1>
+                <form id="form1" action="/predict_by_supplier" method="post">
+
+                    <div class="input-group">
+                        <label for="supplier_name">Supplier Name:</label>
+                        <select id="supplier_name" class="form-select col-md-4 mt-1" name="supplier_name"
+                            onchange="get_supplier_value()">
+                            <option value="" selected disabled hidden></option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="commodity_name">Commodity Name:</label>
+
+                        <div class="input-group" id="commodity_name_dropdown" style="display: none;">
+                            <div class="custom-dropdown">
+
+                                <div class="dropdown-content" id="commodity-dropdown-content">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <input type="hidden" name="selected_commodities" id="selected_commodities">
+
+                    <div class="input-group">
+                        <lable for="valid_supplychain" class="form-label">Supply Chain Emission Factors:</lable>
+                        <input id="valid_supplychain" type="number" class="form-control mt-1"
+                            name="Supply_Chain_Emission_Factors" min="0.001" max="1" step="0.001">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="valid_quantity" class="form-label">Quantity:</label> <input id="valid_quantity"
+                            class="form-control mt-1" type="number" name="quantity" min="1"></label>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="mode_of_transport">Mode of Transport:</label>
+                        <select id="mode_of_transport" class="form-select col-md-4 mt-1" name="mode_of_transport"
+                            onchange=" get_transport_value()">
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="fuel_type">Fuel Type:</label>
+                        <select id="fuel_type" class="form-select col-md-4 mt-1" name="fuel_type">
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="valid_distance" class="form-label">Distance (km):</label> <input id="valid_distance"
+                            type="number" class="form-control mt-1" name="distance_km" min="1" max="100000"
+                            step="0.001">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary" id="submit_button"
+                            onclick="initdata();data_validation()">Submit </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="container">
+                <div>
+                    <p id="alldata" class="alert-primary">
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script -->
+    <script>
+
+
+
+        // JavaScript code to populate the supplier dropdown
+        const supplier_mapping = {
+            'BLUEWATER ENERGY SERVICES B.V.': ['Battery'],
+            'CONSTRUCTION ET PROCEDES': ['Main turbine generator'],
+            'EMERSON AUTOMATION SOLUTIONS AS': ['Battery'],
+            'EUREKA PUMPS AS': ['Water Pump'],
+            'GENERAL INDUSTRY SYSTEMS AS': ['Battery'],
+            'IKM TESTING AS': ['Water Pump'],
+            'KAEFER ENERGY AS': ['Water Pump'],
+            'MMSA': ['PIPE, FITTINGS & SPOOLS'],
+            'NDT NORDIC AS': ['Water Pump'],
+            'NUOVO PIGNONE INTERNATIONAL S.R.L.': ['Main turbine generator', 'Water Pump', 'PIPE, FITTINGS & SPOOLS'],
+            'ONNINEN AS': ['PIPE, FITTINGS & SPOOLS'],
+            'SOLIDENERGY AS': ['Water Pump', 'Conveyor belts'],
+            'TECHNIP FRANCE SAS': ['Battery', 'Main turbine generator']
+        }
+
+        const supplierDropdown = document.getElementById('supplier_name');
+
+        const suppliers = ['SOLIDENERGY AS', 'NUOVO PIGNONE INTERNATIONAL S.R.L.', 'EUREKA PUMPS AS', 'EMERSON AUTOMATION SOLUTIONS AS', 'KAEFER ENERGY AS',
+            'CONSTRUCTION ET PROCEDES', 'TECHNIP FRANCE SAS', 'IKM TESTING AS',
+            'GENERAL INDUSTRY SYSTEMS AS', 'NDT NORDIC AS', 'BLUEWATER ENERGY SERVICES B.V.', 'MMSA', 'ONNINEN AS'];
+
+        suppliers.forEach(supplier => {
+            const option = document.createElement('option');
+            option.textContent = supplier;
+            supplierDropdown.appendChild(option);
+        });
+
+        function get_supplier_value() {
+            const selected_supplier = supplierDropdown.value;
+            set_commodity_by_supplier(selected_supplier)
+            set_transport_by_supplier(selected_supplier)
+
+
+            fetch('/get_data_supplier/' + selected_supplier)
+                .then(response => response.json())
+                .then(result => {
+
+
+                    const uniqueCommodityNames = [...new Set(result.data.map(row => row[result.columns.indexOf("Commodity_Name")]))];
+
+                    const split_data_dict = {};
+                    t_emi = 0;
+                    t_qa = 0;
+                    t_dis = 0;
+                    uniqueCommodityNames.forEach(commodityname => {
+
+                        split_data_dict[commodityname] = [];
+                        var sum_emi_7 = 0;
+                        var sum_qa_3 = 0;
+                        var sum_dis_6 = 0;
+                        result.data.forEach(row => {
+                            if (row[1] == commodityname) {
+                                split_data_dict[commodityname].push(row);
+                                sum_emi_7 += row[7];
+                                sum_dis_6 += row[6];
+                                sum_qa_3 += row[3];
+                                t_emi += row[7];
+                                t_dis += row[6];
+                                t_qa += row[3];
+                            }
+                        })
+                        let total_data = `
+                                        <table class="table table-bordered border-primary">
+                                            <tr>
+                                                <th>summary</>                                                
+                                                <td>quantity: ${sum_qa_3}</td>                                               
+                                                <td>distance: ${sum_dis_6}</td>
+                                                <td>emission: ${sum_emi_7}</td>
+                                            </tr>
+                                        </table>
+                                        `;
+                        const j_d = generateHTMLTable(split_data_dict[commodityname], result.columns)
+                        document.getElementById('alldata').innerHTML += '<br>' + j_d + total_data;
+
+                    })
+                    let final_data = `
+                        <table class="table table-bordered border-primary">
+                            <tr>
+                                <th>summary all </>                                           
+                                <td>quantity: ${t_qa}</td>                                            
+                                <td>distance: ${t_dis}</td>
+                                <td>emission: ${t_emi}</td>
+                            </tr>
+                        </table>
+                        `;
+
+                    document.getElementById('alldata').innerHTML += '<br>' + final_data;
+                    localStorage.setItem('total_final_data', final_data);
+
+
+                })
+            // Function to generate an HTML table from the data and column names
+            function generateHTMLTable(data, columns) {
+                let html = '<div class="table-responsive"><table class="table table-bordered border-primary"><thead><tr>';
+
+                // Create table header
+                columns.forEach(column => {
+                    html += `<th>${column}</th>`;
+                });
+
+                html += '</tr></thead><tbody>';
+
+                // Populate table body
+                data.forEach(row => {
+                    html += '<tr>';
+                    row.forEach(cell => {
+                        html += `<td>${cell}</td>`;
+                    });
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table>';
+                return html;
+            }
+
+        }
+
+        function set_commodity_by_supplier(selected_value) {
+            const commodityDropdown = document.getElementById('commodity_name_dropdown');
+            commodityDropdown.style.display = 'block';
+
+            const commodityDropdownContent = document.getElementById('commodity-dropdown-content');
+            commodityDropdownContent.innerHTML = '';
+
+            const commodities = supplier_mapping[selected_value];
+            commodities.forEach(commodity => {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'commodity_name';
+                checkbox.value = commodity;
+
+                const label = document.createElement('label');
+                label.textContent = commodity;
+
+                commodityDropdownContent.appendChild(checkbox);
+                commodityDropdownContent.appendChild(label);
+                commodityDropdownContent.appendChild(document.createElement('br'));
+            });
+        }
+        var arr = [];
+
+        function initdata() {
+            $.each($("input[name='commodity_name']:checked"), function () {
+                arr.push($(this).val());
+            });
+            document.getElementById('selected_commodities').value = arr.join("/");
+
+        }
+
+        const transport_mapping = {
+            'BLUEWATER ENERGY SERVICES B.V.': ['Water'],
+            'CONSTRUCTION ET PROCEDES': ['Road'],
+            'EMERSON AUTOMATION SOLUTIONS AS': ['Air'],
+            'EUREKA PUMPS AS': ['Air', 'Road', 'Water'],
+            'GENERAL INDUSTRY SYSTEMS AS': ['Air'],
+            'IKM TESTING AS': ['Road'],
+            'KAEFER ENERGY AS': ['Air', 'Road', 'Water'],
+            'MMSA': ['Road'],
+            'NDT NORDIC AS': ['Water'],
+            'NUOVO PIGNONE INTERNATIONAL S.R.L.': ['Air', 'Road', 'Water'],
+            'ONNINEN AS': ['Road'],
+            'SOLIDENERGY AS': ['Air', 'Road', 'Water'],
+            'TECHNIP FRANCE SAS': ['Air', 'Road', 'Water']
+        };
+
+
+        function set_transport_by_supplier(selected_value) {
+            const transportDropdown = document.getElementById('mode_of_transport');
+            const transports = transport_mapping[selected_value];
+            transportDropdown.options.length = 0;
+            transports.forEach(
+                transport => {
+                    const option = document.createElement('option');
+                    option.textContent = transport;
+                    transportDropdown.add(option);
+                }
+            )
+            get_transport_value()
+        };
+
+        const fuel_maping = {
+            'Air': ['Aviation Fuel', 'Jet fuel', 'Kerosene'],
+            'Road': ['CNG', 'Diesel', 'Electric', 'Petrol'],
+            'Water': ['Diesel', 'LNG', 'Residual Fuel Oil']
+        };
+
+        function get_transport_value() {
+            const selected_transport = document.getElementById('mode_of_transport').value;
+            set_fuel_by_transport(selected_transport);
+
+        };
+
+        function set_fuel_by_transport(selected_value) {
+            const fuelDropdown = document.getElementById('fuel_type');
+            const fuels = fuel_maping[selected_value];
+
+            fuelDropdown.options.length = 0;
+            fuels.forEach(
+                fuel => {
+                    const option = document.createElement('option');
+                    option.textContent = fuel;
+                    fuelDropdown.add(option);
+                }
+            )
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
