@@ -1,3 +1,4 @@
+#comment
 from flask import Flask, render_template, redirect, url_for, request
 import pandas as pd
 import joblib
@@ -5,6 +6,7 @@ import pandas as np
 from sklearn.preprocessing import LabelEncoder
 
 app = Flask(__name__)
+
 
 # Load the pre-trained model from the .pkl file
 model = joblib.load('models/new_trained_rf_model.pkl')
