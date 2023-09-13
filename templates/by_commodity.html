@@ -21,9 +21,26 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="row g-3">
-            <div class="container col-md-7 alert alert-info mt-5">
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            What-If-Analysis
+          </a>
+        </div>
+    </nav>
+    <!-- <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand  position-absolute top-0 start-50" href="#">
+                <img src="stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                What-If-Analysis
+            </a>
+        </div>
+    </nav> -->
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 align-self-start" style="margin: 1%;">
                 <h1>CO2 Emission Prediction</h1>
                 <form id="form" action="/predict_by_commodity" method="post">
 
@@ -87,12 +104,37 @@
 
                 </form>
             </div>
+            <div id="table_data" class="col-md-5 align-self-start"
+                style="margin: 1%; height:445px;overflow-y: scroll; display: none;">
+                <h3>Summary of the Existing Data</h3>
+                <div id="summary">
+                </div>
+                <div>
+                    <table class="table table-bordered border-primary">
+
+                        <thead class="table-dark">
+
+                            <th>Supplier Name </th>
+                            <th>Total Quantity </th>
+                            <th>Total Distance </th>
+                            <th>Total Emission </th>
+
+                        </thead>
+                        <tbody id="summary_table">
+
+                        </tbody>
+
+
+                    </table>
+                </div>
+            </div>
         </div>
 
         <div class="row">
-            <div class="container ">
-                <div>
-                    <p id="alldata" class="alert-primary">
+            <div class="container">
+                <div id="table_alldata" style="display: none;">
+                    <h3>Existing Data</h3>
+                    <p id="alldata">
                     </p>
                 </div>
             </div>
@@ -125,6 +167,8 @@
 
 
         function get_commodity_value() {
+            document.getElementById('table_data').style = 'display:block;';
+            document.getElementById('table_alldata').style = 'display:block;';
             const selected_commodity = commodityDropdown.value;
             set_supplier_by_commodity(selected_commodity)
             set_transport_by_commodity(selected_commodity)
@@ -161,38 +205,47 @@
                             }
                         })
                         let total_data = `
-                                        <table class="table table-bordered border-primary">
+                                        
                                             <tr>
-                                                <th scope="row">summary</th>                                                
-                                                <td>quantity: ${sum_qa_3}</td>                                                
-                                                <td>distance: ${sum_dis_6}</td>
-                                                <td>emission: ${sum_emi_7}</td>
+                                                <td scope="row"><small>${suppliername}</small></td>                                                
+                                                <td> ${sum_qa_3}</td>                                                
+                                                <td> ${sum_dis_6}</td>
+                                                <td> ${sum_emi_7}</td>
                                             </tr>
-                                        </table>
-                                        `;
+                                        
+                                        `;                        
                         const j_d = generateHTMLTable(split_data_dict[suppliername], result.columns)
-                        document.getElementById('alldata').innerHTML += '<br>' + j_d + total_data;
+                        document.getElementById('alldata').innerHTML += '<br>' + j_d;
+                        document.getElementById('summary_table').innerHTML += total_data;
 
 
                     })
                     let final_data = `
                         <table class="table table-bordered border-primary">
+                            <thead class="table-dark">
+                                                
+                                <th>Commodity Name</th>
+                                <th>Total Quantity </th>
+                                <th>Total Distance </th>                                
+                                <th>Total Emission </th>
+                                
+                            </thead>
                             <tr>
-                                <th scope="row">summary all </th>                                           
-                                <td>quantity: ${t_qa}</td>                                            
-                                <td>distance: ${t_dis}</td>
-                                <td>emission: ${t_emi}</td>
+                                <td scope="row">${selected_commodity}</td>                                           
+                                <td> ${t_qa}</td>                                            
+                                <td> ${t_dis}</td>
+                                <td> ${t_emi}</td>
                             </tr>
                         </table>
                         `;
 
-                    document.getElementById('alldata').innerHTML += '<br>' + final_data;
+                    document.getElementById('summary').innerHTML += final_data;
                     localStorage.setItem('total_final_data', final_data);
 
                 })
             // Function to generate an HTML table from the data and column names
             function generateHTMLTable(data, columns) {
-                let html = '<div class="table-responsive"><table class="table table-bordered border-primary"><thead><tr>';
+                let html = '<div class="table-responsive"><table class="table table-bordered border-primary"><thead class="table-dark"><tr>';
 
                 // Create table header
                 columns.forEach(column => {

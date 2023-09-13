@@ -22,11 +22,26 @@
 </head>
 
 <body>
-
-    <!-- Form -->
-    <div class="container">
-        <div class="row g-3">
-            <div class="container col-md-7 alert alert-info mt-5">
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            What-If-Analysis
+          </a>
+        </div>
+    </nav>
+    <!-- <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand  position-absolute top-0 start-50" href="#">
+            <img src="stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            What-If-Analysis
+          </a>
+        </div>
+    </nav> -->
+    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 align-self-start" style="margin: 1%;">
                 <h1>Prediction of CO2</h1>
                 <form id="form1" action="/predict_by_supplier" method="post">
 
@@ -91,12 +106,36 @@
 
                 </form>
             </div>
+            <div id="table_data" class="col-md-5 align-self-start" style="margin: 1%; height:445px;overflow-y: scroll; display: none;">
+                <h3>Summary of the Existing Data</h3>
+                <div id="summary">
+                </div>
+                <div>
+                    <table class="table table-bordered border-primary">
+
+                        <thead class="table-dark">
+
+                            <th>Supplier Name </th>
+                            <th>Total Quantity </th>
+                            <th>Total Distance </th>
+                            <th>Total Emission </th>
+
+                        </thead>
+                        <tbody id="summary_table">
+
+                        </tbody>
+
+
+                    </table>
+                </div>
+            </div>
         </div>
 
         <div class="row">
             <div class="container">
-                <div>
-                    <p id="alldata" class="alert-primary">
+                <div id="table_alldata" style="display: none;">
+                    <h3>Existing Data</h3>
+                    <p id="alldata">
                     </p>
                 </div>
             </div>
@@ -139,6 +178,8 @@
         });
 
         function get_supplier_value() {
+            document.getElementById('table_data').style = 'display:block;';
+            document.getElementById('table_alldata').style = 'display:block;';
             const selected_supplier = supplierDropdown.value;
             set_commodity_by_supplier(selected_supplier)
             set_transport_by_supplier(selected_supplier)
@@ -175,7 +216,7 @@
                         let total_data = `
                                         <table class="table table-bordered border-primary">
                                             <tr>
-                                                <th>summary</>                                                
+                                                <td scope="row"><small>${commodityname}</small></td>                                                
                                                 <td>quantity: ${sum_qa_3}</td>                                               
                                                 <td>distance: ${sum_dis_6}</td>
                                                 <td>emission: ${sum_emi_7}</td>
@@ -183,21 +224,30 @@
                                         </table>
                                         `;
                         const j_d = generateHTMLTable(split_data_dict[commodityname], result.columns)
-                        document.getElementById('alldata').innerHTML += '<br>' + j_d + total_data;
+                        document.getElementById('alldata').innerHTML += '<br>' + j_d;
+                        document.getElementById('summary_table').innerHTML += total_data;
 
                     })
                     let final_data = `
-                        <table class="table table-bordered border-primary">
+                    <table class="table table-bordered border-primary">
+                            <thead class="table-dark">
+                                                
+                                <th>Supplier Name</th>
+                                <th>Total Quantity </th>
+                                <th>Total Distance </th>                                
+                                <th>Total Emission </th>
+                                
+                            </thead>
                             <tr>
-                                <th>summary all </>                                           
-                                <td>quantity: ${t_qa}</td>                                            
-                                <td>distance: ${t_dis}</td>
-                                <td>emission: ${t_emi}</td>
+                                <td scope="row">${selected_supplier}</td>                                           
+                                <td> ${t_qa}</td>                                            
+                                <td> ${t_dis}</td>
+                                <td> ${t_emi}</td>
                             </tr>
                         </table>
                         `;
 
-                    document.getElementById('alldata').innerHTML += '<br>' + final_data;
+                    document.getElementById('summary').innerHTML += final_data;
                     localStorage.setItem('total_final_data', final_data);
 
 
