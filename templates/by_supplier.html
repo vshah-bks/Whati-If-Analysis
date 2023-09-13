@@ -19,92 +19,179 @@
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
 
+        <style>
+            /* Your existing styles... */
+    
+            /* Additional styles for the form... */
+            .form-container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #ffffff;
+                border-radius: 8px;
+                margin-top: 20px;
+            }
+    
+            .form-container h2 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+    
+            .form-group {
+                margin-bottom: 20px;
+                color: #631878;
+            }
+    
+            .form-label {
+                display: inline-block;
+                /* Display them inline */
+                font-size: 14px;
+                color: #631878;
+                width: 500px;
+                /* Adjust the width to your desired size */
+    
+    
+            }
+    
+    
+            .form-input {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+    
+            .form-input:focus {
+                outline: none;
+                border-color: #9550f3;
+            }
+    
+            .form-button {
+                background-color: #631878;
+                color: #ffffff;
+                font-size: 18px;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+    
+            .form-button:hover {
+                background-color: #5436DA;
+            }
+    
+            .navbar .title {
+                text-align: center;
+                flex-grow: 1;
+                padding-right: 270px;
+                margin-right: 80px;
+                text-align: center;
+            }
+    
+    
+            .navbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: #ffffff;
+                color: #631878;
+                padding: 10px;
+                border-bottom: 1px solid #ccc;
+                border-radius: 5x;
+            }
+    
+            .navbar .navbar-text {
+                text-align: right;
+            }
+    
+            .navbar a {
+                color: #631878;
+                text-decoration: none;
+                margin: 0 10px;
+            }
+        </style>
 </head>
 
 <body>
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">
-            <img src="stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            <img src="/static/stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
             What-If-Analysis
           </a>
         </div>
     </nav>
-    <!-- <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand  position-absolute top-0 start-50" href="#">
-            <img src="stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
-            What-If-Analysis
-          </a>
-        </div>
-    </nav> -->
+   
     
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6 align-self-start" style="margin: 1%;">
-                <h1>Prediction of CO2</h1>
-                <form id="form1" action="/predict_by_supplier" method="post">
-
-                    <div class="input-group">
-                        <label for="supplier_name">Supplier Name:</label>
-                        <select id="supplier_name" class="form-select col-md-4 mt-1" name="supplier_name"
-                            onchange="get_supplier_value()">
-                            <option value="" selected disabled hidden></option>
-                        </select>
+                <div class="form-label">
+                    <h2>CO2 Emission Prediction</h2>
+                </div>
+                <form id="form1" action="/predict_by_supplier" method="post" class="container">
+                    <div class="form-group row">
+                        <label for="supplier_name" class="col-md-4 col-form-label">Supplier Name:</label>
+                        <div class="col-md-8">
+                            <select id="supplier_name" class="form-control" name="supplier_name" onchange="get_supplier_value()">
+                                <option value="" selected disabled hidden></option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="input-group">
-                        <label for="commodity_name">Commodity Name:</label>
-
-                        <div class="input-group" id="commodity_name_dropdown" style="display: none;">
-                            <div class="custom-dropdown">
-
-                                <div class="dropdown-content" id="commodity-dropdown-content">
-
+                    <div class="form-group row">
+                        <label for="commodity_name" class="col-md-4 col-form-label">Commodity Name:</label>
+                        <div class="col-md-8">
+                            <div class="form-input" id="commodity_name_dropdown" style="display: none;">
+                                <div class="custom-dropdown">
+                                    <div class="dropdown-content" id="commodity-dropdown-content">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
 
                     <input type="hidden" name="selected_commodities" id="selected_commodities">
-
-                    <div class="input-group">
-                        <lable for="valid_supplychain" class="form-label">Supply Chain Emission Factors:</lable>
-                        <input id="valid_supplychain" type="number" class="form-control mt-1"
-                            name="Supply_Chain_Emission_Factors" min="0.001" max="1" step="0.001">
+                    
+                    <div class="form-group row">
+                        <label for="valid_supplychain" class="col-md-4 col-form-label">Supply Chain Emission Factors:</label>
+                        <div class="col-md-8">
+                            <input id="valid_supplychain" type="number" class="form-control" name="Supply_Chain_Emission_Factors" min="0" max="1" step="0.001">
+                        </div>
                     </div>
-
-                    <div class="input-group">
-                        <label for="valid_quantity" class="form-label">Quantity:</label> <input id="valid_quantity"
-                            class="form-control mt-1" type="number" name="quantity" min="1"></label>
+                    <div class="form-group row">
+                        <label for="valid_quantity" class="col-md-4 col-form-label">Quantity:</label>
+                        <div class="col-md-8">
+                            <input id="valid_quantity" type="number" name="quantity" min="1" class="form-control">
+                        </div>
                     </div>
-
-                    <div class="input-group">
-                        <label for="mode_of_transport">Mode of Transport:</label>
-                        <select id="mode_of_transport" class="form-select col-md-4 mt-1" name="mode_of_transport"
-                            onchange=" get_transport_value()">
-                        </select>
+                    <div class="form-group row">
+                        <label for="mode_of_transport" class="col-md-4 col-form-label">Mode of Transport:</label>
+                        <div class="col-md-8">
+                            <select id="mode_of_transport" class="form-control" name="mode_of_transport" onchange="get_transport_value()">
+                            </select>
+                        </div>
                     </div>
-
-                    <div class="input-group">
-                        <label for="fuel_type">Fuel Type:</label>
-                        <select id="fuel_type" class="form-select col-md-4 mt-1" name="fuel_type">
-                        </select>
+                    <div class="form-group row">
+                        <label for="fuel_type" class="col-md-4 col-form-label">Fuel Type:</label>
+                        <div class="col-md-8">
+                            <select id="fuel_type" class="form-control" name="fuel_type">
+                            </select>
+                        </div>
                     </div>
-
-                    <div class="input-group">
-                        <label for="valid_distance" class="form-label">Distance (km):</label> <input id="valid_distance"
-                            type="number" class="form-control mt-1" name="distance_km" min="1" max="100000"
-                            step="0.001">
+                    <div class="form-group row">
+                        <label for="valid_distance" class="col-md-4 col-form-label">Distance (km):</label>
+                        <div class="col-md-8">
+                            <input id="valid_distance" type="number" class="form-control" name="distance_km" min="1" max="100000" step="0.001">
+                        </div>
                     </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary" id="submit_button"
-                            onclick="initdata();data_validation()">Submit </button>
+                    <div class="form-group row">
+                        <div class="col-md-12 text-center">
+                            <button type="submit" class="btn btn-primary" id="submit_button" onclick="initdata()">Submit</button>
+                        </div>
                     </div>
-
-                </form>
+                </form>                
             </div>
             <div id="table_data" class="col-md-5 align-self-start" style="margin: 1%; height:445px;overflow-y: scroll; display: none;">
                 <h3>Summary of the Existing Data</h3>

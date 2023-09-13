@@ -5,7 +5,7 @@ import joblib
 import pandas as np
 from sklearn.preprocessing import LabelEncoder
 
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='/static', static_folder='static')
 
 
 # Load the pre-trained model from the .pkl file

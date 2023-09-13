@@ -22,40 +22,38 @@
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">
-            <img src="stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            <img src="/static/stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
             What-If-Analysis
           </a>
         </div>
     </nav>
-    <!-- <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand  position-absolute top-0 start-50" href="#">
-            <img src="stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
-            What-If-Analysis
-          </a>
-        </div>
-    </nav> -->
-    <div class="container">
-        <div class="row mt-5">
-            <div class="container">
-                <h1>CO2 Emission Prediction Result by {{name}}</h1>
+    
+    <div class="container-fluid">
+        
+        <div class="row">
+            <div class="col-md-6 align-self-start" style="margin: 1%;">
                 
-                <p>
-                    {{result_data|safe}}
-                </p>
-
-                <p>
-                    Total CO2 emission: {{total_emission|safe}}
-                </p>
-
+                    <h3>CO2 Emission Prediction Result by {{name}}</h3>
+                    
+                    <p>
+                        {{result_data|safe}}
+                    </p>
+    
+                    <p>
+                        Total CO2 emission: {{total_emission|safe}}
+                    </p>
+    
             </div>
+            <div id="summary_alldata" class="col-md-5 align-self-start" style="margin: 1%;">
+                <h6>Predicted Emission: {{total_emission}}</h6>
+            </div>
+           
         </div>
 
-        <div class="row mt-5">
+        <div class="row">
             <div class="container">
                 <h1>Existing CO2 emission data</h1>
-                <div id="summary_alldata">
-                </div>
+                
                 <div>
                     <table class="table table-bordered border-primary">
                         
@@ -125,26 +123,17 @@
                                 </table>
                             `;
             const j_d = generateHTMLTable(split_data_dict[suppliername], result.columns)
-            document.getElementById('summary_data').innerHTML += '<br>' + j_d;
+            document.getElementById('summary_data').innerHTML += j_d;
             document.getElementById('summary_table').innerHTML += total_data;
 
 
         })
-        let final_data = `
-                        <table class="table table-bordered border-primary">
-                            <tr>
-                                <th>summary all </>                                           
-                                <td>quantity: ${t_qa}</td>                                            
-                                <td>distance: ${t_dis}</td>
-                                <td>emission: ${t_emi}</td>
-                            </tr>
-                        </table>
-                        `;
-
-        
+                
         var all_final_data = localStorage.getItem('total_final_data')
         all_final_data = all_final_data.replace('summary all', 'summary all data')
-        document.getElementById('summary_alldata').innerHTML += all_final_data;
+        var existing_emission = localStorage.getItem('total_emission')
+        document.getElementById('summary_alldata').innerHTML += `<h6>Existing emission:[${existing_emission}]</h6>` + all_final_data;
+        console.log(existing_emission);
     }
     else {
         t_emi = 0;
@@ -178,7 +167,7 @@
                                 </table>
                             `;
             const j_d = generateHTMLTable(split_data_dict[commodityname], result.columns)
-            document.getElementById('summary_data').innerHTML += '<br>' + j_d;
+            document.getElementById('summary_data').innerHTML += j_d;
             document.getElementById('summary_table').innerHTML += total_data;
 
         })
@@ -196,7 +185,7 @@
         
         var all_final_data = localStorage.getItem('total_final_data')
         all_final_data = all_final_data.replace('summary all', 'summary all data')
-        document.getElementById('summary_alldata').innerHTML += '<br>' + final_data + '<br>' + all_final_data;
+        document.getElementById('summary_alldata').innerHTML += all_final_data;
     }
 
 
