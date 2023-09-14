@@ -19,60 +19,51 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            <img src="/static/stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
-            What-If-Analysis
-          </a>
-        </div>
-    </nav>
+    <div class="navbar" style="background-color: #D2B4DE;"> 
+        <img src="/static/stldigital.webp" alt="" width="100" height="40" class="d-inline-block align-text-top">  
+
+        <h5 style="text-align: center; color: #631878; padding-right: 450px; margin-right: 80px;">WHAT-IF-ANALYSIS</h5>    
+      
+    </div>
     
+
     <div class="container-fluid">
-        
-        <div class="row">
-            <div class="col-md-6 align-self-start" style="margin: 1%;">
-                
-                    <h3>CO2 Emission Prediction Result by {{name}}</h3>
-                    
-                    <p>
-                        {{result_data|safe}}
-                    </p>
-    
-                    <p>
-                        Total CO2 emission: {{total_emission|safe}}
-                    </p>
-    
-            </div>
-            <div id="summary_alldata" class="col-md-5 align-self-start" style="margin: 1%;">
-                <h6>Predicted Emission: {{total_emission}}</h6>
-            </div>
-           
-        </div>
 
         <div class="row">
-            <div class="container">
-                <h1>Existing CO2 emission data</h1>
-                
+            <div class="col-md-6 align-self-start" style="margin: 1%; background-color: #D2B4DE; border-radius: 15px">
+                <h3 style="color:#631878; text-align: center;">CO2 Emission Prediction Result by {{name}}</h3>
+                <p>
+                    {{result_data|safe}}
+                </p>
+
+                <p>
+                    Total CO2 emission: {{total_emission|safe}}
+                </p>
+
+            </div>
+            <div id="summary_alldata" class="col-md-5 align-self-start"
+                style="margin: 1%; background-color: #D2B4DE; border-radius: 15px">
+                <h6 style="color:#631878;">Predicted Emission: {{total_emission}}</h6>
+            </div>
+
+        </div>
+
+        <div class="row" style="margin:1%;">
+            <div class="container" style="background-color: #D2B4DE; border-radius: 15px;">
+                <h2 style="color:#631878; text-align: center;">Existing CO2 Emission Data</h2>
                 <div>
-                    <table class="table table-bordered border-primary">
-                        
-                        <thead class="table-dark">
-                            
+                    <table class="table table-striped">
+                        <thead style=" color: white; background-color: #631878;">
                             <th>Supplier Name </th>
                             <th>Total Quantity </th>
-                            <th>Total Distance </th>                            
+                            <th>Total Distance </th>
                             <th>Total Emission </th>
-                            
                         </thead>
                         <tbody id="summary_table">
-
                         </tbody>
-                        
-
                     </table>
                 </div>
-                <div id="summary_data">                    
+                <div id="summary_data">
                 </div>
             </div>
         </div>
@@ -96,7 +87,7 @@
         t_qa = 0;
         t_dis = 0;
         uniqueSupplierNames.forEach(suppliername => {
-            
+
             split_data_dict[suppliername] = [];
             var sum_emi_7 = 0;
             var sum_qa_3 = 0;
@@ -112,27 +103,24 @@
                     t_qa += row[3];
                 }
             })
-            let total_data = `
-                                <table class="table table-bordered border-primary">
-                                    <tr>
-                                        <td scope="row"><small>${suppliername}</small></td>                                       
-                                        <td> ${sum_qa_3}</td>                                       
-                                        <td> ${sum_dis_6}</td>
-                                        <td> ${sum_emi_7}</td>
-                                    </tr>
-                                </table>
+            let total_data = `                                
+                            <tr>
+                                <td><small>${suppliername}</small></td>                                       
+                                <td> ${sum_qa_3}</td>                                       
+                                <td> ${sum_dis_6}</td>
+                                <td> ${sum_emi_7}</td>
+                            </tr>                                
                             `;
             const j_d = generateHTMLTable(split_data_dict[suppliername], result.columns)
             document.getElementById('summary_data').innerHTML += j_d;
             document.getElementById('summary_table').innerHTML += total_data;
 
-
         })
-                
+
         var all_final_data = localStorage.getItem('total_final_data')
         all_final_data = all_final_data.replace('summary all', 'summary all data')
         var existing_emission = localStorage.getItem('total_emission')
-        document.getElementById('summary_alldata').innerHTML += `<h6>Existing emission:[${existing_emission}]</h6>` + all_final_data;
+        document.getElementById('summary_alldata').innerHTML += `<h6 style="color:#631878;">Existing emission:[${existing_emission}]</h6>` + all_final_data;
         console.log(existing_emission);
     }
     else {
@@ -140,7 +128,7 @@
         t_qa = 0;
         t_dis = 0;
         uniqueCommodityNames.forEach(commodityname => {
-            
+
             split_data_dict[commodityname] = [];
             var sum_emi_7 = 0;
             var sum_qa_3 = 0;
@@ -156,42 +144,29 @@
                     t_qa += row[3];
                 }
             })
-            let total_data = `
-                                <table class="table table-bordered border-primary">
-                                    <tr>
-                                        <th>${commodityname}</>                                        
-                                        <td> ${sum_qa_3}</td>                                        
-                                        <td> ${sum_dis_6}</td>
-                                        <td> ${sum_emi_7}</td>
-                                    </tr>
-                                </table>
+            let total_data = `                                
+                            <tr>
+                                <th>${commodityname}</>                                        
+                                <td> ${sum_qa_3}</td>                                        
+                                <td> ${sum_dis_6}</td>
+                                <td> ${sum_emi_7}</td>
+                            </tr>                                
                             `;
             const j_d = generateHTMLTable(split_data_dict[commodityname], result.columns)
             document.getElementById('summary_data').innerHTML += j_d;
             document.getElementById('summary_table').innerHTML += total_data;
 
-        })
-        let final_data = `
-                        <table class="table table-bordered border-primary">
-                            <tr>
-                                <th>summary all </>                                           
-                                <td>quantity: ${t_qa}</td>                                            
-                                <td>distance: ${t_dis}</td>
-                                <td>emission: ${t_emi}</td>
-                            </tr>
-                        </table>
-                        `;
+        })        
 
-        
         var all_final_data = localStorage.getItem('total_final_data')
         all_final_data = all_final_data.replace('summary all', 'summary all data')
-        document.getElementById('summary_alldata').innerHTML += all_final_data;
+        var existing_emission = localStorage.getItem('total_emission')
+        document.getElementById('summary_alldata').innerHTML += `<h6 style="color:#631878;">Existing emission:[${existing_emission}]</h6>` + all_final_data;
     }
 
 
-
     function generateHTMLTable(data, columns) {
-        let html = '<div class="table-responsive"><table class="table table-bordered border-primary"><thead class="table-dark"><tr>';
+        let html = '<div class="table-responsive"><table class="table table-striped"><thead style="color: white; background-color: #631878;"><tr>';
 
         // Create table header
         columns.forEach(column => {

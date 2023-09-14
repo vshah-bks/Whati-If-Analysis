@@ -114,22 +114,19 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            <img src="/static/stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
-            What-If-Analysis
-          </a>
-        </div>
-    </nav>
-   
-    
+    <div class="navbar" style="background-color: #D2B4DE;"> 
+        <img src="/static/stldigital.webp" alt="" width="100" height="40" class="d-inline-block align-text-top">  
+
+        <h5 style="text-align: center; color: #631878; padding-right: 450px; margin-right: 80px;">WHAT-IF-ANALYSIS</h5>    
+      
+    </div>
+       
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-6 align-self-start" style="margin: 1%;">
-                <div class="form-label">
-                    <h2>CO2 Emission Prediction</h2>
-                </div>
+            <div class="col-md-6 align-self-start" style="margin: 1%; background-color: #D2B4DE; border-radius: 15px">
+                
+                <h2 style="color:#631878">CO2 Emission Prediction</h2>
+                
                 <form id="form1" action="/predict_by_supplier" method="post" class="container">
                     <div class="form-group row">
                         <label for="supplier_name" class="col-md-4 col-form-label">Supplier Name:</label>
@@ -188,31 +185,25 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-12 text-center">
-                            <button type="submit" class="btn btn-primary" id="submit_button" onclick="initdata()">Submit</button>
+                            <button type="submit" class="btn" style="background-color: #7D3C98; color:white;" id="submit_button" onclick="initdata()">Submit</button>
                         </div>
                     </div>
                 </form>                
             </div>
-            <div id="table_data" class="col-md-5 align-self-start" style="margin: 1%; height:445px;overflow-y: scroll; display: none;">
-                <h3>Summary of the Existing Data</h3>
+            <div id="table_data" class="col-md-5 align-self-start" style="display: none;">
+                <h3 style="color: #631878;text-align: center;">Summary of the Existing Data</h3>
                 <div id="summary">
                 </div>
                 <div>
-                    <table class="table table-bordered border-primary">
-
-                        <thead class="table-dark">
-
-                            <th>Supplier Name </th>
+                    <table class="table table-striped">
+                        <thead style="margin: 1%; color: white; background-color: #631878; border-radius: 15px">
+                            <th>Commodity Name </th>
                             <th>Total Quantity </th>
                             <th>Total Distance </th>
                             <th>Total Emission </th>
-
                         </thead>
                         <tbody id="summary_table">
-
                         </tbody>
-
-
                     </table>
                 </div>
             </div>
@@ -221,7 +212,7 @@
         <div class="row">
             <div class="container">
                 <div id="table_alldata" style="display: none;">
-                    <h3>Existing Data</h3>
+                    <h3 style="color: #631878;text-align: center;">Existing Data</h3>
                     <p id="alldata">
                     </p>
                 </div>
@@ -232,9 +223,6 @@
 
     <!-- Script -->
     <script>
-
-
-
         // JavaScript code to populate the supplier dropdown
         const supplier_mapping = {
             'BLUEWATER ENERGY SERVICES B.V.': ['Battery'],
@@ -265,8 +253,8 @@
         });
 
         function get_supplier_value() {
-            document.getElementById('table_data').style = 'display:block;';
-            document.getElementById('table_alldata').style = 'display:block;';
+            document.getElementById('table_data').style = 'display:block; background-color: #D2B4DE; border-radius: 15px; margin: 1%;';
+            document.getElementById('table_alldata').style = 'display:block; padding:15px; background-color: #D2B4DE; border-radius: 15px; margin: 1%;';
             const selected_supplier = supplierDropdown.value;
             set_commodity_by_supplier(selected_supplier)
             set_transport_by_supplier(selected_supplier)
@@ -275,8 +263,6 @@
             fetch('/get_data_supplier/' + selected_supplier)
                 .then(response => response.json())
                 .then(result => {
-
-
                     const uniqueCommodityNames = [...new Set(result.data.map(row => row[result.columns.indexOf("Commodity_Name")]))];
 
                     const split_data_dict = {};
@@ -284,7 +270,6 @@
                     t_qa = 0;
                     t_dis = 0;
                     uniqueCommodityNames.forEach(commodityname => {
-
                         split_data_dict[commodityname] = [];
                         var sum_emi_7 = 0;
                         var sum_qa_3 = 0;
@@ -300,15 +285,13 @@
                                 t_qa += row[3];
                             }
                         })
-                        let total_data = `
-                                        <table class="table table-bordered border-primary">
-                                            <tr>
-                                                <td scope="row"><small>${commodityname}</small></td>                                                
-                                                <td>quantity: ${sum_qa_3}</td>                                               
-                                                <td>distance: ${sum_dis_6}</td>
-                                                <td>emission: ${sum_emi_7}</td>
-                                            </tr>
-                                        </table>
+                        let total_data = `                                        
+                                        <tr>
+                                            <td scope="row"><small>${commodityname}</small></td>                                                
+                                            <td>quantity: ${sum_qa_3}</td>                                               
+                                            <td>distance: ${sum_dis_6}</td>
+                                            <td>emission: ${sum_emi_7}</td>
+                                        </tr>                                        
                                         `;
                         const j_d = generateHTMLTable(split_data_dict[commodityname], result.columns)
                         document.getElementById('alldata').innerHTML += '<br>' + j_d;
@@ -316,8 +299,8 @@
 
                     })
                     let final_data = `
-                    <table class="table table-bordered border-primary">
-                            <thead class="table-dark">
+                    <table class="table table-striped">
+                            <thead style="margin: 1%; color: white; background-color: #631878; border-radius: 15px">
                                                 
                                 <th>Supplier Name</th>
                                 <th>Total Quantity </th>
@@ -336,12 +319,10 @@
 
                     document.getElementById('summary').innerHTML += final_data;
                     localStorage.setItem('total_final_data', final_data);
-
-
                 })
             // Function to generate an HTML table from the data and column names
             function generateHTMLTable(data, columns) {
-                let html = '<div class="table-responsive"><table class="table table-bordered border-primary"><thead><tr>';
+                let html = '<div class="table-responsive"><table class="table table-striped"><thead style="margin: 1%; color: white; background-color: #631878; border-radius: 15px"><tr>';
 
                 // Create table header
                 columns.forEach(column => {
@@ -454,9 +435,7 @@
             )
         }
 
-
     </script>
-
 
 </body>
 

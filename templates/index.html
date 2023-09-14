@@ -19,37 +19,31 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            <img src="/static/stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
-            What-If-Analysis
-          </a>
-        </div>
-    </nav>
-    <!-- <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand position-absolute top-0 start-50" href="#">
-            <img src="stldigital.jpg" alt="" width="30" height="24" class="d-inline-block align-text-top">
-            What-If-Analysis
-          </a>
-        </div>
-    </nav> -->
+    <div class="navbar" style="background-color: #D2B4DE;"> 
+        <img src="/static/stldigital.webp" alt="" width="200" height="80" class="d-inline-block align-text-top">
+      
+        <h3 style="text-align: center; color: #631878; padding-right: 450px; margin-right: 80px;">WHAT-IF-ANALYSIS</h3>     
+      
+    </div> 
+   
     <div class="container">
         <div class="position-absolute top-50 start-50 translate-middle">
-            <div class="card text-white alert-info mb-3" style="width: 25rem;">
-                <div class="card-header text-center alert-info">
-                    <h3>Prediction of CO2</h3>
+            <div class="card text-white" style="width: 25rem; background-color: #D2B4DE;">
+                <div class="card-header text-center">
+                    <h3 style="color:#631878">Prediction of CO2</h3>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2 col-20 mx-auto">
-                        <p class="btn btn-dark"><a class="text-info" style="text-decoration: none;" href="{{ url_for('page1') }}">Select Supplier by Commodity</a></p>
-                        <p class="btn btn-dark"><a class="text-info" style="text-decoration: none;" href="{{ url_for('page2') }}">Select Commodity by Supplier</a></p>
+                        <p class="btn" style="background-color: #631878;">
+                            <a class="text" style="text-decoration: none; color: white;" href="{{ url_for('page1') }}">Select Supplier by Commodity</a>
+                        </p>
+                        <p class="btn" style="background-color: #631878;">
+                            <a class="text" style="text-decoration: none; color: white;" href="{{ url_for('page2') }}">Select Commodity by Supplier</a>
+                        </p>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-
+    
 </body>
